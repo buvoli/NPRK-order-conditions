@@ -1,0 +1,2184 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 13.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     81671,       2176]
+NotebookOptionsPosition[     77361,       2112]
+NotebookOutlinePosition[     77800,       2129]
+CellTagsIndexPosition[     77757,       2126]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{"Clear", "[", "\"\<Global`*\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Needs", "[", "\"\<Notation`\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"SetDirectory", "[", 
+   RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";"}]}], "Input",
+ CellChangeTimes->{{3.9115752885593586`*^9, 3.911575292392551*^9}, {
+  3.9115807108922505`*^9, 3.9115807236096926`*^9}},
+ CellLabel->"In[16]:=",ExpressionUUID->"f80e652a-9315-4753-9ea1-96cc19bcbcf8"],
+
+Cell[CellGroupData[{
+
+Cell["Symbolic order conditions M = 3 partitions: F(y,y,y)", "Subsection",
+ CellChangeTimes->{{3.9466073063025093`*^9, 
+  3.946607314939415*^9}},ExpressionUUID->"97b2ec05-12c2-3d4b-a8f7-\
+15154eb26b47"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+    "Generates", " ", "symbolic", " ", "NPRK", " ", "order", " ", 
+     "conditions", " ", "for", " ", "M"}], " ", "=", " ", 
+    RowBox[{
+    "3", " ", "partitions", " ", "for", " ", "any", " ", "given", " ", 
+     "order"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Reads", " ", "in", " ", "the", " ", "output", " ", "file", " ", 
+    "generated", " ", "from", " ", "M_colored", "_rooted", 
+    RowBox[{"_trees", ".", "jl"}]}], " ", "*)"}]}]], "Input",
+ CellChangeTimes->{{3.9119127623921137`*^9, 3.9119127667880845`*^9}, {
+  3.9465985598942738`*^9, 3.9465985735118313`*^9}, {3.9466065788399563`*^9, 
+  3.9466065795013313`*^9}, {3.9466066548041*^9, 3.9466066555053883`*^9}, {
+  3.9466166507604713`*^9, 3.9466166508313274`*^9}, {3.946680449438505*^9, 
+  3.9466804535953217`*^9}},ExpressionUUID->"6ee46217-3df2-4da5-97c6-\
+42b29e4408dd"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", "Initialize", " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"order", " ", "=", " ", "3"}], ";"}], " ", 
+   RowBox[{"(*", " ", 
+    RowBox[{
+    "change", " ", "to", " ", "the", " ", "desired", " ", "order", " ", 
+     "value"}], " ", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"outputMatrix", "=", 
+     RowBox[{"Import", "[", 
+      RowBox[{"\"\<M3_output\>\"", "<>", 
+       RowBox[{"ToString", "[", "order", "]"}], "<>", "\"\<.csv\>\""}], 
+      "]"}]}], ";"}], " ", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Forest", "=", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"TakeList", "[", 
+        RowBox[{
+         RowBox[{"outputMatrix", "[", 
+          RowBox[{"[", "i", "]"}], "]"}], ",", 
+         RowBox[{"{", 
+          RowBox[{"order", ",", "order", ",", "1"}], "}"}]}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", "1", ",", 
+         RowBox[{"Length", "[", "outputMatrix", "]"}]}], "}"}]}], "]"}]}], 
+    ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.9115807465424805`*^9, 3.9115807548301363`*^9}, {
+  3.911580788494302*^9, 3.9115807972971134`*^9}, {3.9115822088555155`*^9, 
+  3.911582209044073*^9}, {3.911582420611063*^9, 3.911582431316704*^9}, {
+  3.9116661950905437`*^9, 3.9116662138019333`*^9}, {3.9119126523952827`*^9, 
+  3.911912657204528*^9}, {3.9119127076513433`*^9, 3.9119127186598096`*^9}, {
+  3.946606553087145*^9, 3.9466065897613754`*^9}, {3.94660701682024*^9, 
+  3.9466070305376472`*^9}, {3.946607125080261*^9, 3.946607153039385*^9}},
+ CellLabel->"In[20]:=",ExpressionUUID->"f418797e-9269-460d-83c5-22e3678fdcce"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "gives", " ", "the", " ", "index", " ", "of", " ", "the", " ", "parent", 
+    " ", "node", " ", "of", " ", "a", " ", "given", " ", "node"}], " ", 
+   "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"GetParentIndex", "[", 
+    RowBox[{"treelevelseq_", ",", " ", "nodeindex_"}], "]"}], ":=", " ", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", "toReturn", "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"For", "[", 
+       RowBox[{
+        RowBox[{"i", "=", "nodeindex"}], ",", " ", 
+        RowBox[{"i", ">", " ", "0"}], ",", " ", 
+        RowBox[{"i", "--"}], ",", "\[IndentingNewLine]", 
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"treelevelseq", "[", 
+            RowBox[{"[", "i", "]"}], "]"}], "==", 
+           RowBox[{
+            RowBox[{"treelevelseq", "[", 
+             RowBox[{"[", "nodeindex", "]"}], "]"}], "-", "1"}]}], ",", " ", 
+          "\[IndentingNewLine]", 
+          RowBox[{
+           RowBox[{"toReturn", "=", "i"}], ";", " ", 
+           RowBox[{"i", "=", "0"}]}], ","}], " ", "]"}]}], 
+       "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      "toReturn"}]}], "\[IndentingNewLine]", "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.9115755683943853`*^9, 3.9115755729024005`*^9}, {
+  3.9116661755208244`*^9, 3.9116661877775292`*^9}},
+ CellLabel->"In[23]:=",ExpressionUUID->"41377f13-fe03-477e-a441-699080ef2e8e"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"gives", " ", "the", " ", "1", "st"}], ",", " ", 
+    RowBox[{"2", "nd"}], ",", " ", 
+    RowBox[{
+    "or", " ", "3", "rd", " ", "index", " ", "of", " ", "the", " ", "parent", 
+     " ", "node", " ", "based", " ", "on", " ", "the", " ", "color", " ", 
+     "of", " ", "the", " ", "child"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"colorToParentIndex", "[", 
+    RowBox[{"treelevelseq_", ",", "treecolorseq_", ",", "nodeindex_"}], "]"}],
+    ":=", "\[IndentingNewLine]", 
+   RowBox[{"Which", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"treecolorseq", "[", 
+       RowBox[{"[", "nodeindex", "]"}], "]"}], "==", "0"}], ",", 
+     RowBox[{"Subscript", "[", 
+      RowBox[{"j", ",", 
+       RowBox[{"GetParentIndex", "[", 
+        RowBox[{"treelevelseq", ",", "nodeindex"}], "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"treecolorseq", "[", 
+       RowBox[{"[", "nodeindex", "]"}], "]"}], "==", "1"}], ",", 
+     RowBox[{"Subscript", "[", 
+      RowBox[{"k", ",", 
+       RowBox[{"GetParentIndex", "[", 
+        RowBox[{"treelevelseq", ",", "nodeindex"}], "]"}]}], "]"}], ",", 
+     RowBox[{
+      RowBox[{"treecolorseq", "[", 
+       RowBox[{"[", "nodeindex", "]"}], "]"}], "==", "2"}], ",", 
+     RowBox[{"Subscript", "[", 
+      RowBox[{"l", ",", 
+       RowBox[{"GetParentIndex", "[", 
+        RowBox[{"treelevelseq", ",", "nodeindex"}], "]"}]}], "]"}]}], 
+    "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.9115755787582893`*^9, 3.9115755951654253`*^9}, {
+  3.911666144340313*^9, 3.9116661706395555`*^9}, {3.911912754980998*^9, 
+  3.911912756235545*^9}, {3.911912853221719*^9, 3.911912919116553*^9}, {
+  3.9119129633667345`*^9, 3.911913020265032*^9}, {3.9466073451490803`*^9, 
+  3.946607346326668*^9}},
+ CellLabel->"In[24]:=",ExpressionUUID->"690c46a8-6858-438b-ad65-4672c987e2c1"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "converts", " ", "given", " ", "tree", " ", "to", " ", "the", " ", 
+    "corresponding", " ", "symbolic", " ", "NPRK", " ", "weight"}], " ", 
+   "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{"treeWeight", "[", 
+    RowBox[{"treelevelseq_", ",", "treecolorseq_"}], "]"}], ":=", 
+   "\[IndentingNewLine]", 
+   RowBox[{"Module", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"toReturn", "=", "1"}], "}"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"For", "[", 
+       RowBox[{
+        RowBox[{"m", "=", 
+         RowBox[{"Length", "[", "treelevelseq", "]"}]}], ",", 
+        RowBox[{"m", ">", "1"}], ",", 
+        RowBox[{"m", "--"}], ",", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"toReturn", " ", "*=", 
+          RowBox[{"Subscript", "[", 
+           RowBox[{"a", ",", 
+            RowBox[{"colorToParentIndex", "[", 
+             RowBox[{"treelevelseq", ",", "treecolorseq", ",", "m"}], "]"}], 
+            ",", 
+            RowBox[{"Subscript", "[", 
+             RowBox[{"j", ",", "m"}], "]"}], ",", 
+            RowBox[{"Subscript", "[", 
+             RowBox[{"k", ",", "m"}], "]"}], ",", 
+            RowBox[{"Subscript", "[", 
+             RowBox[{"l", ",", "m"}], "]"}]}], "]"}]}], ";"}]}], 
+       "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+      RowBox[{"toReturn", " ", "=", " ", 
+       RowBox[{
+        RowBox[{"Subscript", "[", 
+         RowBox[{"b", ",", 
+          RowBox[{"Subscript", "[", 
+           RowBox[{"j", ",", "1"}], "]"}], ",", 
+          RowBox[{"Subscript", "[", 
+           RowBox[{"k", ",", "1"}], "]"}], ",", 
+          RowBox[{"Subscript", "[", 
+           RowBox[{"l", ",", "1"}], "]"}]}], "]"}], "*", "toReturn"}]}], ";", 
+      "\[IndentingNewLine]", "toReturn"}]}], "\[IndentingNewLine]", 
+    "]"}]}]}]], "Input",
+ CellLabel->"In[25]:=",ExpressionUUID->"ad4c79b1-4420-f94c-a9fb-b7204a0a41a9"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{
+    "Determines", " ", "if", " ", "a", " ", "tree", " ", "is", " ", 
+     "multicolored", " ", "and", " ", "color", " ", 
+     RowBox[{
+     "branching", ".", " ", "\[IndentingNewLine]", "  ", "Multicolored"}], 
+     " ", "but", " ", "not", " ", "color", " ", 
+     RowBox[{"branching", " ", "--"}]}], ">", " ", 
+    RowBox[{
+    "Linearly", " ", "separable", " ", "coupling", " ", "condition", 
+     "\[IndentingNewLine]", "     ", "Color", " ", 
+     RowBox[{"branching", " ", "--"}]}], ">", " ", 
+    RowBox[{"nonlinear", " ", "coupling", " ", "condition"}]}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"isMultiColored", "[", 
+     RowBox[{"treelevelseq_", ",", "treecolorseq_"}], "]"}], ":=", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"toReturn", "=", " ", "0"}], "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"For", "[", 
+        RowBox[{
+         RowBox[{"m", "=", "2"}], ",", " ", 
+         RowBox[{"m", " ", "<=", " ", 
+          RowBox[{
+           RowBox[{"Length", "[", "treelevelseq", "]"}], "-", "1"}]}], ",", 
+         RowBox[{"m", "++"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"For", "[", 
+          RowBox[{
+           RowBox[{"n", " ", "=", " ", 
+            RowBox[{"m", "+", "1"}]}], ",", " ", 
+           RowBox[{"n", " ", "<=", " ", 
+            RowBox[{"Length", "[", "treelevelseq", "]"}]}], ",", " ", 
+           RowBox[{"n", "++"}], ",", "\[IndentingNewLine]", "    ", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{"treecolorseq", "[", 
+               RowBox[{"[", "m", "]"}], "]"}], "!=", " ", 
+              RowBox[{"treecolorseq", "[", 
+               RowBox[{"[", "n", "]"}], "]"}]}], ",", 
+             RowBox[{"toReturn", "=", "1"}], ","}], "]"}]}], 
+          "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}], ";", 
+       "\[IndentingNewLine]", "toReturn"}]}], "\[IndentingNewLine]", "]"}]}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"isColorBranching", "[", 
+     RowBox[{"treelevelseq_", ",", "treecolorseq_"}], "]"}], ":=", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"toReturn", "=", " ", "0"}], "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"For", "[", 
+        RowBox[{
+         RowBox[{"m", "=", "2"}], ",", " ", 
+         RowBox[{"m", " ", "<=", " ", 
+          RowBox[{
+           RowBox[{"Length", "[", "treelevelseq", "]"}], "-", "1"}]}], ",", 
+         RowBox[{"m", "++"}], ",", "\[IndentingNewLine]", 
+         RowBox[{"For", "[", 
+          RowBox[{
+           RowBox[{"n", " ", "=", " ", 
+            RowBox[{"m", "+", "1"}]}], ",", " ", 
+           RowBox[{"n", " ", "<=", " ", 
+            RowBox[{"Length", "[", "treelevelseq", "]"}]}], ",", " ", 
+           RowBox[{"n", "++"}], ",", "\[IndentingNewLine]", "    ", 
+           RowBox[{"If", "[", 
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{"GetParentIndex", "[", 
+                RowBox[{"treelevelseq", ",", "m"}], "]"}], "==", 
+               RowBox[{"GetParentIndex", "[", 
+                RowBox[{"treelevelseq", ",", "n"}], "]"}]}], " ", "&&", " ", 
+              RowBox[{
+               RowBox[{"treecolorseq", "[", 
+                RowBox[{"[", "m", "]"}], "]"}], "!=", 
+               RowBox[{"treecolorseq", "[", 
+                RowBox[{"[", "n", "]"}], "]"}]}]}], ",", 
+             RowBox[{"toReturn", "=", "1"}], ","}], "]"}]}], 
+          "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", "]"}], ";", 
+       "\[IndentingNewLine]", "toReturn"}]}], "\[IndentingNewLine]", 
+     "]"}]}]}]}]], "Input",
+ CellChangeTimes->{{3.9120003489897814`*^9, 3.9120005698144712`*^9}, {
+  3.9120006830723715`*^9, 3.9120006892914314`*^9}, {3.912001314420164*^9, 
+  3.912001373476165*^9}, {3.912003676191416*^9, 3.912003688450167*^9}},
+ CellLabel->"In[26]:=",ExpressionUUID->"1811007f-a066-4120-90e1-f4459d3d947c"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Loops", " ", "through", " ", "all", " ", "trees", " ", "of", " ", "given",
+     " ", "order", " ", "and", " ", "outputs", " ", "order", " ", 
+    "conditions", " ", "in", " ", "LaTeX", " ", "form"}], " ", "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"For", "[", 
+   RowBox[{
+    RowBox[{"tree", " ", "=", " ", "1"}], ",", " ", 
+    RowBox[{"tree", " ", "<=", " ", 
+     RowBox[{"Length", "[", "Forest", "]"}]}], ",", " ", 
+    RowBox[{"tree", "++"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"Print", "[", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"TeXForm", "[", 
+        RowBox[{
+         RowBox[{"Forest", "[", 
+          RowBox[{"[", "tree", "]"}], "]"}], "[", 
+         RowBox[{"[", "1", "]"}], "]"}], "]"}], ",", 
+       RowBox[{"TeXForm", "[", 
+        RowBox[{
+         RowBox[{"Forest", "[", 
+          RowBox[{"[", "tree", "]"}], "]"}], "[", 
+         RowBox[{"[", "2", "]"}], "]"}], "]"}], ",", 
+       RowBox[{"TeXForm", "[", 
+        RowBox[{"treeWeight", "[", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Forest", "[", 
+            RowBox[{"[", "tree", "]"}], "]"}], "[", 
+           RowBox[{"[", "1", "]"}], "]"}], ",", 
+          RowBox[{
+           RowBox[{"Forest", "[", 
+            RowBox[{"[", "tree", "]"}], "]"}], "[", 
+           RowBox[{"[", "2", "]"}], "]"}]}], "]"}], "]"}], ",", " ", 
+       RowBox[{"TeXForm", "[", 
+        RowBox[{"1", "/", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"Forest", "[", 
+            RowBox[{"[", "tree", "]"}], "]"}], "[", 
+           RowBox[{"[", "3", "]"}], "]"}], "[", 
+          RowBox[{"[", "1", "]"}], "]"}]}], "]"}]}], "}"}], "]"}]}], 
+   "\[IndentingNewLine]", "]"}]}]], "Input",
+ CellChangeTimes->{{3.911666230284402*^9, 3.9116662317124877`*^9}, 
+   3.946607408990284*^9},
+ CellLabel->"In[28]:=",ExpressionUUID->"ec2b3235-f37d-4257-80fa-7b5090a194ea"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox["\<\"\\\\{1,2,3\\\\}\"\>",
+    TeXForm[{1, 2, 3}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\{0,0,0\\\\}\"\>",
+    TeXForm[{0, 0, 0}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"a_{j_1,j_2,k_2,l_2} a_{j_2,j_3,k_3,l_3} \
+b_{j_1,k_1,l_1}\"\>",
+    TeXForm[Subscript[$CellContext`b, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`l, 1]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`l, 2]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`j, 3], 
+       Subscript[$CellContext`k, 3], 
+       Subscript[$CellContext`l, 3]]],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\frac{1}{6}\"\>",
+    TeXForm[
+     Rational[1, 6]],
+    AutoDelete->True,
+    Editable->True]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.911666249903222*^9, 3.911913176250578*^9, 3.9119132501274137`*^9, {
+   3.9120014722176466`*^9, 3.9120014822895823`*^9}, 3.9120037155852065`*^9, 
+   3.94660705041123*^9, {3.9466071276513386`*^9, 3.9466071556577473`*^9}, 
+   3.9466074449579334`*^9, 3.9466166227808285`*^9},
+ CellLabel->
+  "During evaluation of \
+In[28]:=",ExpressionUUID->"674574a8-681f-0d43-8a45-7869f96b16ed"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox["\<\"\\\\{1,2,3\\\\}\"\>",
+    TeXForm[{1, 2, 3}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\{0,0,1\\\\}\"\>",
+    TeXForm[{0, 0, 1}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"a_{j_1,j_2,k_2,l_2} a_{k_2,j_3,k_3,l_3} \
+b_{j_1,k_1,l_1}\"\>",
+    TeXForm[Subscript[$CellContext`b, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`l, 1]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`l, 2]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`j, 3], 
+       Subscript[$CellContext`k, 3], 
+       Subscript[$CellContext`l, 3]]],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\frac{1}{6}\"\>",
+    TeXForm[
+     Rational[1, 6]],
+    AutoDelete->True,
+    Editable->True]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.911666249903222*^9, 3.911913176250578*^9, 3.9119132501274137`*^9, {
+   3.9120014722176466`*^9, 3.9120014822895823`*^9}, 3.9120037155852065`*^9, 
+   3.94660705041123*^9, {3.9466071276513386`*^9, 3.9466071556577473`*^9}, 
+   3.9466074449579334`*^9, 3.946616622787838*^9},
+ CellLabel->
+  "During evaluation of \
+In[28]:=",ExpressionUUID->"0a4ea2a2-ec29-9845-8fc3-785f7a40fcf4"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox["\<\"\\\\{1,2,3\\\\}\"\>",
+    TeXForm[{1, 2, 3}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\{0,0,2\\\\}\"\>",
+    TeXForm[{0, 0, 2}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"a_{j_1,j_2,k_2,l_2} a_{l_2,j_3,k_3,l_3} \
+b_{j_1,k_1,l_1}\"\>",
+    TeXForm[Subscript[$CellContext`b, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`l, 1]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`l, 2]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`l, 2], 
+       Subscript[$CellContext`j, 3], 
+       Subscript[$CellContext`k, 3], 
+       Subscript[$CellContext`l, 3]]],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\frac{1}{6}\"\>",
+    TeXForm[
+     Rational[1, 6]],
+    AutoDelete->True,
+    Editable->True]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.911666249903222*^9, 3.911913176250578*^9, 3.9119132501274137`*^9, {
+   3.9120014722176466`*^9, 3.9120014822895823`*^9}, 3.9120037155852065`*^9, 
+   3.94660705041123*^9, {3.9466071276513386`*^9, 3.9466071556577473`*^9}, 
+   3.9466074449579334`*^9, 3.9466166227987785`*^9},
+ CellLabel->
+  "During evaluation of \
+In[28]:=",ExpressionUUID->"ebd99f75-167d-8647-b69d-f0a461f74e85"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox["\<\"\\\\{1,2,3\\\\}\"\>",
+    TeXForm[{1, 2, 3}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\{0,1,0\\\\}\"\>",
+    TeXForm[{0, 1, 0}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"a_{j_2,j_3,k_3,l_3} a_{k_1,j_2,k_2,l_2} \
+b_{j_1,k_1,l_1}\"\>",
+    TeXForm[Subscript[$CellContext`b, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`l, 1]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`j, 3], 
+       Subscript[$CellContext`k, 3], 
+       Subscript[$CellContext`l, 3]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`l, 2]]],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\frac{1}{6}\"\>",
+    TeXForm[
+     Rational[1, 6]],
+    AutoDelete->True,
+    Editable->True]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.911666249903222*^9, 3.911913176250578*^9, 3.9119132501274137`*^9, {
+   3.9120014722176466`*^9, 3.9120014822895823`*^9}, 3.9120037155852065`*^9, 
+   3.94660705041123*^9, {3.9466071276513386`*^9, 3.9466071556577473`*^9}, 
+   3.9466074449579334`*^9, 3.9466166228017693`*^9},
+ CellLabel->
+  "During evaluation of \
+In[28]:=",ExpressionUUID->"69bf6894-4739-304f-9f49-a34694f0b9eb"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox["\<\"\\\\{1,2,3\\\\}\"\>",
+    TeXForm[{1, 2, 3}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\{0,1,1\\\\}\"\>",
+    TeXForm[{0, 1, 1}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"a_{k_1,j_2,k_2,l_2} a_{k_2,j_3,k_3,l_3} \
+b_{j_1,k_1,l_1}\"\>",
+    TeXForm[Subscript[$CellContext`b, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`l, 1]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`l, 2]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`j, 3], 
+       Subscript[$CellContext`k, 3], 
+       Subscript[$CellContext`l, 3]]],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\frac{1}{6}\"\>",
+    TeXForm[
+     Rational[1, 6]],
+    AutoDelete->True,
+    Editable->True]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.911666249903222*^9, 3.911913176250578*^9, 3.9119132501274137`*^9, {
+   3.9120014722176466`*^9, 3.9120014822895823`*^9}, 3.9120037155852065`*^9, 
+   3.94660705041123*^9, {3.9466071276513386`*^9, 3.9466071556577473`*^9}, 
+   3.9466074449579334`*^9, 3.946616622806801*^9},
+ CellLabel->
+  "During evaluation of \
+In[28]:=",ExpressionUUID->"da2a432a-a882-1449-a22b-15d2629d0faf"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox["\<\"\\\\{1,2,3\\\\}\"\>",
+    TeXForm[{1, 2, 3}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\{0,1,2\\\\}\"\>",
+    TeXForm[{0, 1, 2}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"a_{k_1,j_2,k_2,l_2} a_{l_2,j_3,k_3,l_3} \
+b_{j_1,k_1,l_1}\"\>",
+    TeXForm[Subscript[$CellContext`b, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`l, 1]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`l, 2]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`l, 2], 
+       Subscript[$CellContext`j, 3], 
+       Subscript[$CellContext`k, 3], 
+       Subscript[$CellContext`l, 3]]],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\frac{1}{6}\"\>",
+    TeXForm[
+     Rational[1, 6]],
+    AutoDelete->True,
+    Editable->True]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.911666249903222*^9, 3.911913176250578*^9, 3.9119132501274137`*^9, {
+   3.9120014722176466`*^9, 3.9120014822895823`*^9}, 3.9120037155852065`*^9, 
+   3.94660705041123*^9, {3.9466071276513386`*^9, 3.9466071556577473`*^9}, 
+   3.9466074449579334`*^9, 3.9466166228107758`*^9},
+ CellLabel->
+  "During evaluation of \
+In[28]:=",ExpressionUUID->"18e9f101-fef0-864f-ba4d-6e4f30a63567"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox["\<\"\\\\{1,2,3\\\\}\"\>",
+    TeXForm[{1, 2, 3}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\{0,2,0\\\\}\"\>",
+    TeXForm[{0, 2, 0}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"a_{j_2,j_3,k_3,l_3} a_{l_1,j_2,k_2,l_2} \
+b_{j_1,k_1,l_1}\"\>",
+    TeXForm[Subscript[$CellContext`b, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`l, 1]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`j, 3], 
+       Subscript[$CellContext`k, 3], 
+       Subscript[$CellContext`l, 3]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`l, 1], 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`l, 2]]],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\frac{1}{6}\"\>",
+    TeXForm[
+     Rational[1, 6]],
+    AutoDelete->True,
+    Editable->True]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.911666249903222*^9, 3.911913176250578*^9, 3.9119132501274137`*^9, {
+   3.9120014722176466`*^9, 3.9120014822895823`*^9}, 3.9120037155852065`*^9, 
+   3.94660705041123*^9, {3.9466071276513386`*^9, 3.9466071556577473`*^9}, 
+   3.9466074449579334`*^9, 3.9466166228137913`*^9},
+ CellLabel->
+  "During evaluation of \
+In[28]:=",ExpressionUUID->"bd02593a-0096-1543-b775-6662db224a19"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox["\<\"\\\\{1,2,3\\\\}\"\>",
+    TeXForm[{1, 2, 3}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\{0,2,1\\\\}\"\>",
+    TeXForm[{0, 2, 1}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"a_{k_2,j_3,k_3,l_3} a_{l_1,j_2,k_2,l_2} \
+b_{j_1,k_1,l_1}\"\>",
+    TeXForm[Subscript[$CellContext`b, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`l, 1]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`j, 3], 
+       Subscript[$CellContext`k, 3], 
+       Subscript[$CellContext`l, 3]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`l, 1], 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`l, 2]]],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\frac{1}{6}\"\>",
+    TeXForm[
+     Rational[1, 6]],
+    AutoDelete->True,
+    Editable->True]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.911666249903222*^9, 3.911913176250578*^9, 3.9119132501274137`*^9, {
+   3.9120014722176466`*^9, 3.9120014822895823`*^9}, 3.9120037155852065`*^9, 
+   3.94660705041123*^9, {3.9466071276513386`*^9, 3.9466071556577473`*^9}, 
+   3.9466074449579334`*^9, 3.9466166228167305`*^9},
+ CellLabel->
+  "During evaluation of \
+In[28]:=",ExpressionUUID->"f0846fb3-3654-234b-81b2-c39825f9d7f1"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox["\<\"\\\\{1,2,3\\\\}\"\>",
+    TeXForm[{1, 2, 3}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\{0,2,2\\\\}\"\>",
+    TeXForm[{0, 2, 2}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"a_{l_1,j_2,k_2,l_2} a_{l_2,j_3,k_3,l_3} \
+b_{j_1,k_1,l_1}\"\>",
+    TeXForm[Subscript[$CellContext`b, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`l, 1]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`l, 1], 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`l, 2]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`l, 2], 
+       Subscript[$CellContext`j, 3], 
+       Subscript[$CellContext`k, 3], 
+       Subscript[$CellContext`l, 3]]],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\frac{1}{6}\"\>",
+    TeXForm[
+     Rational[1, 6]],
+    AutoDelete->True,
+    Editable->True]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.911666249903222*^9, 3.911913176250578*^9, 3.9119132501274137`*^9, {
+   3.9120014722176466`*^9, 3.9120014822895823`*^9}, 3.9120037155852065`*^9, 
+   3.94660705041123*^9, {3.9466071276513386`*^9, 3.9466071556577473`*^9}, 
+   3.9466074449579334`*^9, 3.946616622820736*^9},
+ CellLabel->
+  "During evaluation of \
+In[28]:=",ExpressionUUID->"86b621cc-fd63-6c4a-92d7-7e987b2fc158"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox["\<\"\\\\{1,2,2\\\\}\"\>",
+    TeXForm[{1, 2, 2}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\{0,0,0\\\\}\"\>",
+    TeXForm[{0, 0, 0}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"a_{j_1,j_2,k_2,l_2} a_{j_1,j_3,k_3,l_3} \
+b_{j_1,k_1,l_1}\"\>",
+    TeXForm[Subscript[$CellContext`b, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`l, 1]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`l, 2]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`j, 3], 
+       Subscript[$CellContext`k, 3], 
+       Subscript[$CellContext`l, 3]]],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\frac{1}{3}\"\>",
+    TeXForm[
+     Rational[1, 3]],
+    AutoDelete->True,
+    Editable->True]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.911666249903222*^9, 3.911913176250578*^9, 3.9119132501274137`*^9, {
+   3.9120014722176466`*^9, 3.9120014822895823`*^9}, 3.9120037155852065`*^9, 
+   3.94660705041123*^9, {3.9466071276513386`*^9, 3.9466071556577473`*^9}, 
+   3.9466074449579334`*^9, 3.9466166228247395`*^9},
+ CellLabel->
+  "During evaluation of \
+In[28]:=",ExpressionUUID->"0d92630c-4925-1f45-896c-de3b5f9933d2"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox["\<\"\\\\{1,2,2\\\\}\"\>",
+    TeXForm[{1, 2, 2}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\{0,1,0\\\\}\"\>",
+    TeXForm[{0, 1, 0}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"a_{j_1,j_3,k_3,l_3} a_{k_1,j_2,k_2,l_2} \
+b_{j_1,k_1,l_1}\"\>",
+    TeXForm[Subscript[$CellContext`b, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`l, 1]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`j, 3], 
+       Subscript[$CellContext`k, 3], 
+       Subscript[$CellContext`l, 3]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`l, 2]]],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\frac{1}{3}\"\>",
+    TeXForm[
+     Rational[1, 3]],
+    AutoDelete->True,
+    Editable->True]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.911666249903222*^9, 3.911913176250578*^9, 3.9119132501274137`*^9, {
+   3.9120014722176466`*^9, 3.9120014822895823`*^9}, 3.9120037155852065`*^9, 
+   3.94660705041123*^9, {3.9466071276513386`*^9, 3.9466071556577473`*^9}, 
+   3.9466074449579334`*^9, 3.9466166228277035`*^9},
+ CellLabel->
+  "During evaluation of \
+In[28]:=",ExpressionUUID->"5c587b2d-f472-ec4f-be11-f6f72d07ee2c"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox["\<\"\\\\{1,2,2\\\\}\"\>",
+    TeXForm[{1, 2, 2}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\{0,2,0\\\\}\"\>",
+    TeXForm[{0, 2, 0}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"a_{j_1,j_3,k_3,l_3} a_{l_1,j_2,k_2,l_2} \
+b_{j_1,k_1,l_1}\"\>",
+    TeXForm[Subscript[$CellContext`b, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`l, 1]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`j, 3], 
+       Subscript[$CellContext`k, 3], 
+       Subscript[$CellContext`l, 3]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`l, 1], 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`l, 2]]],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\frac{1}{3}\"\>",
+    TeXForm[
+     Rational[1, 3]],
+    AutoDelete->True,
+    Editable->True]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.911666249903222*^9, 3.911913176250578*^9, 3.9119132501274137`*^9, {
+   3.9120014722176466`*^9, 3.9120014822895823`*^9}, 3.9120037155852065`*^9, 
+   3.94660705041123*^9, {3.9466071276513386`*^9, 3.9466071556577473`*^9}, 
+   3.9466074449579334`*^9, 3.9466166228316917`*^9},
+ CellLabel->
+  "During evaluation of \
+In[28]:=",ExpressionUUID->"35ee9353-e79c-794b-9a85-18b4a38d892e"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox["\<\"\\\\{1,2,2\\\\}\"\>",
+    TeXForm[{1, 2, 2}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\{0,1,1\\\\}\"\>",
+    TeXForm[{0, 1, 1}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"a_{k_1,j_2,k_2,l_2} a_{k_1,j_3,k_3,l_3} \
+b_{j_1,k_1,l_1}\"\>",
+    TeXForm[Subscript[$CellContext`b, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`l, 1]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`l, 2]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`j, 3], 
+       Subscript[$CellContext`k, 3], 
+       Subscript[$CellContext`l, 3]]],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\frac{1}{3}\"\>",
+    TeXForm[
+     Rational[1, 3]],
+    AutoDelete->True,
+    Editable->True]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.911666249903222*^9, 3.911913176250578*^9, 3.9119132501274137`*^9, {
+   3.9120014722176466`*^9, 3.9120014822895823`*^9}, 3.9120037155852065`*^9, 
+   3.94660705041123*^9, {3.9466071276513386`*^9, 3.9466071556577473`*^9}, 
+   3.9466074449579334`*^9, 3.9466166228357124`*^9},
+ CellLabel->
+  "During evaluation of \
+In[28]:=",ExpressionUUID->"09cf37e1-90fb-e743-8044-d0dfbf500685"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox["\<\"\\\\{1,2,2\\\\}\"\>",
+    TeXForm[{1, 2, 2}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\{0,2,1\\\\}\"\>",
+    TeXForm[{0, 2, 1}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"a_{k_1,j_3,k_3,l_3} a_{l_1,j_2,k_2,l_2} \
+b_{j_1,k_1,l_1}\"\>",
+    TeXForm[Subscript[$CellContext`b, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`l, 1]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`j, 3], 
+       Subscript[$CellContext`k, 3], 
+       Subscript[$CellContext`l, 3]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`l, 1], 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`l, 2]]],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\frac{1}{3}\"\>",
+    TeXForm[
+     Rational[1, 3]],
+    AutoDelete->True,
+    Editable->True]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.911666249903222*^9, 3.911913176250578*^9, 3.9119132501274137`*^9, {
+   3.9120014722176466`*^9, 3.9120014822895823`*^9}, 3.9120037155852065`*^9, 
+   3.94660705041123*^9, {3.9466071276513386`*^9, 3.9466071556577473`*^9}, 
+   3.9466074449579334`*^9, 3.9466166228406963`*^9},
+ CellLabel->
+  "During evaluation of \
+In[28]:=",ExpressionUUID->"c1f9264f-d90a-c045-aad5-9c4a775f5501"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   InterpretationBox["\<\"\\\\{1,2,2\\\\}\"\>",
+    TeXForm[{1, 2, 2}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\{0,2,2\\\\}\"\>",
+    TeXForm[{0, 2, 2}],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"a_{l_1,j_2,k_2,l_2} a_{l_1,j_3,k_3,l_3} \
+b_{j_1,k_1,l_1}\"\>",
+    TeXForm[Subscript[$CellContext`b, 
+       Subscript[$CellContext`j, 1], 
+       Subscript[$CellContext`k, 1], 
+       Subscript[$CellContext`l, 1]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`l, 1], 
+       Subscript[$CellContext`j, 2], 
+       Subscript[$CellContext`k, 2], 
+       Subscript[$CellContext`l, 2]] Subscript[$CellContext`a, 
+       Subscript[$CellContext`l, 1], 
+       Subscript[$CellContext`j, 3], 
+       Subscript[$CellContext`k, 3], 
+       Subscript[$CellContext`l, 3]]],
+    AutoDelete->True,
+    Editable->True], ",", 
+   InterpretationBox["\<\"\\\\frac{1}{3}\"\>",
+    TeXForm[
+     Rational[1, 3]],
+    AutoDelete->True,
+    Editable->True]}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.911666249903222*^9, 3.911913176250578*^9, 3.9119132501274137`*^9, {
+   3.9120014722176466`*^9, 3.9120014822895823`*^9}, 3.9120037155852065`*^9, 
+   3.94660705041123*^9, {3.9466071276513386`*^9, 3.9466071556577473`*^9}, 
+   3.9466074449579334`*^9, 3.9466166228446846`*^9},
+ CellLabel->
+  "During evaluation of \
+In[28]:=",ExpressionUUID->"7c15fd8d-261f-ec4c-9baa-56e9ce84f997"]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Loops", " ", "through", " ", "all", " ", "trees", " ", "of", " ", "given",
+     " ", "order", " ", "and", " ", "outputs", " ", "order", " ", 
+    "conditions", " ", "to", " ", "view", " ", "in", " ", "Mathematica", " ", 
+    "notebook"}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{"Form", ":", " ", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Level", " ", "sequence"}], ",", " ", 
+      RowBox[{"Color", " ", "sequence"}], ",", " ", 
+      RowBox[{"Order", " ", "Condition"}], ",", " ", "isMultiColored", ",", 
+      " ", "isColorBranching"}], "}"}]}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"weightToSum", "[", 
+     RowBox[{"treelevelseq_", ",", " ", "treeweight_"}], "]"}], ":=", 
+    "\[IndentingNewLine]", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"toReturn", " ", "=", " ", "treeweight"}], "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"For", "[", 
+        RowBox[{
+         RowBox[{"m", " ", "=", " ", "1"}], ",", " ", 
+         RowBox[{"m", "<=", 
+          RowBox[{"Length", "[", "treelevelseq", "]"}]}], ",", 
+         RowBox[{"m", "++"}], ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"toReturn", " ", "=", " ", 
+           RowBox[{"Sum", "[", 
+            RowBox[{"toReturn", ",", 
+             RowBox[{"Subscript", "[", 
+              RowBox[{"j", ",", "m"}], "]"}], ",", 
+             RowBox[{"Subscript", "[", 
+              RowBox[{"k", ",", "m"}], "]"}], ",", 
+             RowBox[{"Subscript", "[", 
+              RowBox[{"l", ",", "m"}], "]"}]}], "]"}]}], ";"}]}], 
+        "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+       "toReturn"}]}], "\[IndentingNewLine]", "]"}]}], "\[IndentingNewLine]", 
+   RowBox[{"For", "[", 
+    RowBox[{
+     RowBox[{"tree", " ", "=", " ", "1"}], ",", " ", 
+     RowBox[{"tree", " ", "<=", " ", 
+      RowBox[{"Length", "[", "Forest", "]"}]}], ",", " ", 
+     RowBox[{"tree", "++"}], ",", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"Print", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"Forest", "[", 
+           RowBox[{"[", "tree", "]"}], "]"}], "[", 
+          RowBox[{"[", "1", "]"}], "]"}], ",", 
+         RowBox[{
+          RowBox[{"Forest", "[", 
+           RowBox[{"[", "tree", "]"}], "]"}], "[", 
+          RowBox[{"[", "2", "]"}], "]"}], ",", 
+         RowBox[{
+          RowBox[{"weightToSum", "[", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"Forest", "[", 
+              RowBox[{"[", "tree", "]"}], "]"}], "[", 
+             RowBox[{"[", "1", "]"}], "]"}], ",", 
+            RowBox[{"treeWeight", "[", 
+             RowBox[{
+              RowBox[{
+               RowBox[{"Forest", "[", 
+                RowBox[{"[", "tree", "]"}], "]"}], "[", 
+               RowBox[{"[", "1", "]"}], "]"}], ",", 
+              RowBox[{
+               RowBox[{"Forest", "[", 
+                RowBox[{"[", "tree", "]"}], "]"}], "[", 
+               RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], "]"}], " ", "==", 
+          " ", 
+          RowBox[{"1", "/", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"Forest", "[", 
+              RowBox[{"[", "tree", "]"}], "]"}], "[", 
+             RowBox[{"[", "3", "]"}], "]"}], "[", 
+            RowBox[{"[", "1", "]"}], "]"}]}]}], ",", 
+         RowBox[{"isMultiColored", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Forest", "[", 
+             RowBox[{"[", "tree", "]"}], "]"}], "[", 
+            RowBox[{"[", "1", "]"}], "]"}], ",", 
+           RowBox[{
+            RowBox[{"Forest", "[", 
+             RowBox[{"[", "tree", "]"}], "]"}], "[", 
+            RowBox[{"[", "2", "]"}], "]"}]}], "]"}], ",", 
+         RowBox[{"isColorBranching", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"Forest", "[", 
+             RowBox[{"[", "tree", "]"}], "]"}], "[", 
+            RowBox[{"[", "1", "]"}], "]"}], ",", 
+           RowBox[{
+            RowBox[{"Forest", "[", 
+             RowBox[{"[", "tree", "]"}], "]"}], "[", 
+            RowBox[{"[", "2", "]"}], "]"}]}], "]"}]}], "}"}], "]"}], ";"}]}], 
+    "\[IndentingNewLine]", "]"}]}]}]], "Input",
+ CellChangeTimes->{{3.9115763342795377`*^9, 3.911576378584175*^9}, {
+  3.911576418763492*^9, 3.911576597100604*^9}, {3.911576669540481*^9, 
+  3.9115766701996326`*^9}, {3.911666225528472*^9, 3.9116662446623263`*^9}, {
+  3.9119131936134315`*^9, 3.911913196157694*^9}, {3.9120014678009834`*^9, 
+  3.912001478094521*^9}, {3.912003705907761*^9, 3.9120037100380044`*^9}, {
+  3.9466071916806774`*^9, 3.9466072537575245`*^9}},
+ CellLabel->"In[29]:=",ExpressionUUID->"4794322d-63c1-45e3-b331-df1f9d9ec1c3"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "0", ",", "0"}], "}"}], ",", 
+   RowBox[{
+    RowBox[{
+     UnderscriptBox["\[Sum]", 
+      SubscriptBox["j", "3"]], 
+     RowBox[{
+      UnderscriptBox["\[Sum]", 
+       SubscriptBox["k", "3"]], 
+      RowBox[{
+       UnderscriptBox["\[Sum]", 
+        SubscriptBox["l", "3"]], 
+       RowBox[{"(", 
+        RowBox[{
+         UnderscriptBox["\[Sum]", 
+          SubscriptBox["j", "2"]], 
+         RowBox[{
+          UnderscriptBox["\[Sum]", 
+           SubscriptBox["k", "2"]], 
+          RowBox[{
+           UnderscriptBox["\[Sum]", 
+            SubscriptBox["l", "2"]], 
+           RowBox[{"(", 
+            RowBox[{
+             UnderscriptBox["\[Sum]", 
+              SubscriptBox["j", "1"]], 
+             RowBox[{
+              UnderscriptBox["\[Sum]", 
+               SubscriptBox["k", "1"]], 
+              RowBox[{
+               UnderscriptBox["\[Sum]", 
+                SubscriptBox["l", "1"]], 
+               RowBox[{
+                SubscriptBox["b", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["l", "1"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["l", "2"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["j", "3"], ",", 
+                  SubscriptBox["k", "3"], ",", 
+                  SubscriptBox["l", "3"]}]]}]}]}]}], ")"}]}]}]}], ")"}]}]}]}],
+     "\[Equal]", 
+    FractionBox["1", "6"]}], ",", "0", ",", "0"}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.9116662502957954`*^9, 3.911913210835936*^9, 3.9119132502376947`*^9, {
+   3.912001472312009*^9, 3.9120014823839226`*^9}, 3.9120037156795425`*^9, 
+   3.9466070858438263`*^9, {3.9466071280806503`*^9, 3.9466071557689705`*^9}, 
+   3.946607245393343*^9, 3.946607445069437*^9, 3.9466166229604187`*^9},
+ CellLabel->
+  "During evaluation of \
+In[29]:=",ExpressionUUID->"fafe6941-ee6e-4843-ac34-77b75b96c482"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "0", ",", "1"}], "}"}], ",", 
+   RowBox[{
+    RowBox[{
+     UnderscriptBox["\[Sum]", 
+      SubscriptBox["j", "3"]], 
+     RowBox[{
+      UnderscriptBox["\[Sum]", 
+       SubscriptBox["k", "3"]], 
+      RowBox[{
+       UnderscriptBox["\[Sum]", 
+        SubscriptBox["l", "3"]], 
+       RowBox[{"(", 
+        RowBox[{
+         UnderscriptBox["\[Sum]", 
+          SubscriptBox["j", "2"]], 
+         RowBox[{
+          UnderscriptBox["\[Sum]", 
+           SubscriptBox["k", "2"]], 
+          RowBox[{
+           UnderscriptBox["\[Sum]", 
+            SubscriptBox["l", "2"]], 
+           RowBox[{"(", 
+            RowBox[{
+             UnderscriptBox["\[Sum]", 
+              SubscriptBox["j", "1"]], 
+             RowBox[{
+              UnderscriptBox["\[Sum]", 
+               SubscriptBox["k", "1"]], 
+              RowBox[{
+               UnderscriptBox["\[Sum]", 
+                SubscriptBox["l", "1"]], 
+               RowBox[{
+                SubscriptBox["b", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["l", "1"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["l", "2"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["j", "3"], ",", 
+                  SubscriptBox["k", "3"], ",", 
+                  SubscriptBox["l", "3"]}]]}]}]}]}], ")"}]}]}]}], ")"}]}]}]}],
+     "\[Equal]", 
+    FractionBox["1", "6"]}], ",", "1", ",", "0"}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.9116662502957954`*^9, 3.911913210835936*^9, 3.9119132502376947`*^9, {
+   3.912001472312009*^9, 3.9120014823839226`*^9}, 3.9120037156795425`*^9, 
+   3.9466070858438263`*^9, {3.9466071280806503`*^9, 3.9466071557689705`*^9}, 
+   3.946607245393343*^9, 3.946607445069437*^9, 3.9466166229663334`*^9},
+ CellLabel->
+  "During evaluation of \
+In[29]:=",ExpressionUUID->"25b695b2-8b8b-974e-832d-a3b1fe2b3605"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "0", ",", "2"}], "}"}], ",", 
+   RowBox[{
+    RowBox[{
+     UnderscriptBox["\[Sum]", 
+      SubscriptBox["j", "3"]], 
+     RowBox[{
+      UnderscriptBox["\[Sum]", 
+       SubscriptBox["k", "3"]], 
+      RowBox[{
+       UnderscriptBox["\[Sum]", 
+        SubscriptBox["l", "3"]], 
+       RowBox[{"(", 
+        RowBox[{
+         UnderscriptBox["\[Sum]", 
+          SubscriptBox["j", "2"]], 
+         RowBox[{
+          UnderscriptBox["\[Sum]", 
+           SubscriptBox["k", "2"]], 
+          RowBox[{
+           UnderscriptBox["\[Sum]", 
+            SubscriptBox["l", "2"]], 
+           RowBox[{"(", 
+            RowBox[{
+             UnderscriptBox["\[Sum]", 
+              SubscriptBox["j", "1"]], 
+             RowBox[{
+              UnderscriptBox["\[Sum]", 
+               SubscriptBox["k", "1"]], 
+              RowBox[{
+               UnderscriptBox["\[Sum]", 
+                SubscriptBox["l", "1"]], 
+               RowBox[{
+                SubscriptBox["b", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["l", "1"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["l", "2"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["l", "2"], ",", 
+                  SubscriptBox["j", "3"], ",", 
+                  SubscriptBox["k", "3"], ",", 
+                  SubscriptBox["l", "3"]}]]}]}]}]}], ")"}]}]}]}], ")"}]}]}]}],
+     "\[Equal]", 
+    FractionBox["1", "6"]}], ",", "1", ",", "0"}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.9116662502957954`*^9, 3.911913210835936*^9, 3.9119132502376947`*^9, {
+   3.912001472312009*^9, 3.9120014823839226`*^9}, 3.9120037156795425`*^9, 
+   3.9466070858438263`*^9, {3.9466071280806503`*^9, 3.9466071557689705`*^9}, 
+   3.946607245393343*^9, 3.946607445069437*^9, 3.9466166229773045`*^9},
+ CellLabel->
+  "During evaluation of \
+In[29]:=",ExpressionUUID->"bd8d3dd7-3a75-1e46-9f71-eaa35df5e923"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "0"}], "}"}], ",", 
+   RowBox[{
+    RowBox[{
+     UnderscriptBox["\[Sum]", 
+      SubscriptBox["j", "3"]], 
+     RowBox[{
+      UnderscriptBox["\[Sum]", 
+       SubscriptBox["k", "3"]], 
+      RowBox[{
+       UnderscriptBox["\[Sum]", 
+        SubscriptBox["l", "3"]], 
+       RowBox[{"(", 
+        RowBox[{
+         UnderscriptBox["\[Sum]", 
+          SubscriptBox["j", "2"]], 
+         RowBox[{
+          UnderscriptBox["\[Sum]", 
+           SubscriptBox["k", "2"]], 
+          RowBox[{
+           UnderscriptBox["\[Sum]", 
+            SubscriptBox["l", "2"]], 
+           RowBox[{"(", 
+            RowBox[{
+             UnderscriptBox["\[Sum]", 
+              SubscriptBox["j", "1"]], 
+             RowBox[{
+              UnderscriptBox["\[Sum]", 
+               SubscriptBox["k", "1"]], 
+              RowBox[{
+               UnderscriptBox["\[Sum]", 
+                SubscriptBox["l", "1"]], 
+               RowBox[{
+                SubscriptBox["b", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["l", "1"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["j", "3"], ",", 
+                  SubscriptBox["k", "3"], ",", 
+                  SubscriptBox["l", "3"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["l", "2"]}]]}]}]}]}], ")"}]}]}]}], ")"}]}]}]}],
+     "\[Equal]", 
+    FractionBox["1", "6"]}], ",", "1", ",", "0"}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.9116662502957954`*^9, 3.911913210835936*^9, 3.9119132502376947`*^9, {
+   3.912001472312009*^9, 3.9120014823839226`*^9}, 3.9120037156795425`*^9, 
+   3.9466070858438263`*^9, {3.9466071280806503`*^9, 3.9466071557689705`*^9}, 
+   3.946607245393343*^9, 3.946607445069437*^9, 3.9466166229823265`*^9},
+ CellLabel->
+  "During evaluation of \
+In[29]:=",ExpressionUUID->"7c68aee3-f2cc-c441-bfee-7ff67b2a70dd"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "1"}], "}"}], ",", 
+   RowBox[{
+    RowBox[{
+     UnderscriptBox["\[Sum]", 
+      SubscriptBox["j", "3"]], 
+     RowBox[{
+      UnderscriptBox["\[Sum]", 
+       SubscriptBox["k", "3"]], 
+      RowBox[{
+       UnderscriptBox["\[Sum]", 
+        SubscriptBox["l", "3"]], 
+       RowBox[{"(", 
+        RowBox[{
+         UnderscriptBox["\[Sum]", 
+          SubscriptBox["j", "2"]], 
+         RowBox[{
+          UnderscriptBox["\[Sum]", 
+           SubscriptBox["k", "2"]], 
+          RowBox[{
+           UnderscriptBox["\[Sum]", 
+            SubscriptBox["l", "2"]], 
+           RowBox[{"(", 
+            RowBox[{
+             UnderscriptBox["\[Sum]", 
+              SubscriptBox["j", "1"]], 
+             RowBox[{
+              UnderscriptBox["\[Sum]", 
+               SubscriptBox["k", "1"]], 
+              RowBox[{
+               UnderscriptBox["\[Sum]", 
+                SubscriptBox["l", "1"]], 
+               RowBox[{
+                SubscriptBox["b", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["l", "1"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["l", "2"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["j", "3"], ",", 
+                  SubscriptBox["k", "3"], ",", 
+                  SubscriptBox["l", "3"]}]]}]}]}]}], ")"}]}]}]}], ")"}]}]}]}],
+     "\[Equal]", 
+    FractionBox["1", "6"]}], ",", "0", ",", "0"}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.9116662502957954`*^9, 3.911913210835936*^9, 3.9119132502376947`*^9, {
+   3.912001472312009*^9, 3.9120014823839226`*^9}, 3.9120037156795425`*^9, 
+   3.9466070858438263`*^9, {3.9466071280806503`*^9, 3.9466071557689705`*^9}, 
+   3.946607245393343*^9, 3.946607445069437*^9, 3.9466166230401363`*^9},
+ CellLabel->
+  "During evaluation of \
+In[29]:=",ExpressionUUID->"2eccc8ad-0984-8344-8a90-e092d9005d3e"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "2"}], "}"}], ",", 
+   RowBox[{
+    RowBox[{
+     UnderscriptBox["\[Sum]", 
+      SubscriptBox["j", "3"]], 
+     RowBox[{
+      UnderscriptBox["\[Sum]", 
+       SubscriptBox["k", "3"]], 
+      RowBox[{
+       UnderscriptBox["\[Sum]", 
+        SubscriptBox["l", "3"]], 
+       RowBox[{"(", 
+        RowBox[{
+         UnderscriptBox["\[Sum]", 
+          SubscriptBox["j", "2"]], 
+         RowBox[{
+          UnderscriptBox["\[Sum]", 
+           SubscriptBox["k", "2"]], 
+          RowBox[{
+           UnderscriptBox["\[Sum]", 
+            SubscriptBox["l", "2"]], 
+           RowBox[{"(", 
+            RowBox[{
+             UnderscriptBox["\[Sum]", 
+              SubscriptBox["j", "1"]], 
+             RowBox[{
+              UnderscriptBox["\[Sum]", 
+               SubscriptBox["k", "1"]], 
+              RowBox[{
+               UnderscriptBox["\[Sum]", 
+                SubscriptBox["l", "1"]], 
+               RowBox[{
+                SubscriptBox["b", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["l", "1"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["l", "2"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["l", "2"], ",", 
+                  SubscriptBox["j", "3"], ",", 
+                  SubscriptBox["k", "3"], ",", 
+                  SubscriptBox["l", "3"]}]]}]}]}]}], ")"}]}]}]}], ")"}]}]}]}],
+     "\[Equal]", 
+    FractionBox["1", "6"]}], ",", "1", ",", "0"}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.9116662502957954`*^9, 3.911913210835936*^9, 3.9119132502376947`*^9, {
+   3.912001472312009*^9, 3.9120014823839226`*^9}, 3.9120037156795425`*^9, 
+   3.9466070858438263`*^9, {3.9466071280806503`*^9, 3.9466071557689705`*^9}, 
+   3.946607245393343*^9, 3.946607445069437*^9, 3.946616623045124*^9},
+ CellLabel->
+  "During evaluation of \
+In[29]:=",ExpressionUUID->"239216c4-0b5b-9f47-80bb-134838a30307"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "2", ",", "0"}], "}"}], ",", 
+   RowBox[{
+    RowBox[{
+     UnderscriptBox["\[Sum]", 
+      SubscriptBox["j", "3"]], 
+     RowBox[{
+      UnderscriptBox["\[Sum]", 
+       SubscriptBox["k", "3"]], 
+      RowBox[{
+       UnderscriptBox["\[Sum]", 
+        SubscriptBox["l", "3"]], 
+       RowBox[{"(", 
+        RowBox[{
+         UnderscriptBox["\[Sum]", 
+          SubscriptBox["j", "2"]], 
+         RowBox[{
+          UnderscriptBox["\[Sum]", 
+           SubscriptBox["k", "2"]], 
+          RowBox[{
+           UnderscriptBox["\[Sum]", 
+            SubscriptBox["l", "2"]], 
+           RowBox[{"(", 
+            RowBox[{
+             UnderscriptBox["\[Sum]", 
+              SubscriptBox["j", "1"]], 
+             RowBox[{
+              UnderscriptBox["\[Sum]", 
+               SubscriptBox["k", "1"]], 
+              RowBox[{
+               UnderscriptBox["\[Sum]", 
+                SubscriptBox["l", "1"]], 
+               RowBox[{
+                SubscriptBox["b", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["l", "1"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["j", "3"], ",", 
+                  SubscriptBox["k", "3"], ",", 
+                  SubscriptBox["l", "3"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["l", "1"], ",", 
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["l", "2"]}]]}]}]}]}], ")"}]}]}]}], ")"}]}]}]}],
+     "\[Equal]", 
+    FractionBox["1", "6"]}], ",", "1", ",", "0"}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.9116662502957954`*^9, 3.911913210835936*^9, 3.9119132502376947`*^9, {
+   3.912001472312009*^9, 3.9120014823839226`*^9}, 3.9120037156795425`*^9, 
+   3.9466070858438263`*^9, {3.9466071280806503`*^9, 3.9466071557689705`*^9}, 
+   3.946607245393343*^9, 3.946607445069437*^9, 3.9466166230830193`*^9},
+ CellLabel->
+  "During evaluation of \
+In[29]:=",ExpressionUUID->"db0ac549-ff36-3346-ace6-0d5218e36f62"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "2", ",", "1"}], "}"}], ",", 
+   RowBox[{
+    RowBox[{
+     UnderscriptBox["\[Sum]", 
+      SubscriptBox["j", "3"]], 
+     RowBox[{
+      UnderscriptBox["\[Sum]", 
+       SubscriptBox["k", "3"]], 
+      RowBox[{
+       UnderscriptBox["\[Sum]", 
+        SubscriptBox["l", "3"]], 
+       RowBox[{"(", 
+        RowBox[{
+         UnderscriptBox["\[Sum]", 
+          SubscriptBox["j", "2"]], 
+         RowBox[{
+          UnderscriptBox["\[Sum]", 
+           SubscriptBox["k", "2"]], 
+          RowBox[{
+           UnderscriptBox["\[Sum]", 
+            SubscriptBox["l", "2"]], 
+           RowBox[{"(", 
+            RowBox[{
+             UnderscriptBox["\[Sum]", 
+              SubscriptBox["j", "1"]], 
+             RowBox[{
+              UnderscriptBox["\[Sum]", 
+               SubscriptBox["k", "1"]], 
+              RowBox[{
+               UnderscriptBox["\[Sum]", 
+                SubscriptBox["l", "1"]], 
+               RowBox[{
+                SubscriptBox["b", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["l", "1"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["j", "3"], ",", 
+                  SubscriptBox["k", "3"], ",", 
+                  SubscriptBox["l", "3"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["l", "1"], ",", 
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["l", "2"]}]]}]}]}]}], ")"}]}]}]}], ")"}]}]}]}],
+     "\[Equal]", 
+    FractionBox["1", "6"]}], ",", "1", ",", "0"}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.9116662502957954`*^9, 3.911913210835936*^9, 3.9119132502376947`*^9, {
+   3.912001472312009*^9, 3.9120014823839226`*^9}, 3.9120037156795425`*^9, 
+   3.9466070858438263`*^9, {3.9466071280806503`*^9, 3.9466071557689705`*^9}, 
+   3.946607245393343*^9, 3.946607445069437*^9, 3.9466166231209183`*^9},
+ CellLabel->
+  "During evaluation of \
+In[29]:=",ExpressionUUID->"bc455788-4211-7c45-93dd-73d48e750c9c"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "3"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "2", ",", "2"}], "}"}], ",", 
+   RowBox[{
+    RowBox[{
+     UnderscriptBox["\[Sum]", 
+      SubscriptBox["j", "3"]], 
+     RowBox[{
+      UnderscriptBox["\[Sum]", 
+       SubscriptBox["k", "3"]], 
+      RowBox[{
+       UnderscriptBox["\[Sum]", 
+        SubscriptBox["l", "3"]], 
+       RowBox[{"(", 
+        RowBox[{
+         UnderscriptBox["\[Sum]", 
+          SubscriptBox["j", "2"]], 
+         RowBox[{
+          UnderscriptBox["\[Sum]", 
+           SubscriptBox["k", "2"]], 
+          RowBox[{
+           UnderscriptBox["\[Sum]", 
+            SubscriptBox["l", "2"]], 
+           RowBox[{"(", 
+            RowBox[{
+             UnderscriptBox["\[Sum]", 
+              SubscriptBox["j", "1"]], 
+             RowBox[{
+              UnderscriptBox["\[Sum]", 
+               SubscriptBox["k", "1"]], 
+              RowBox[{
+               UnderscriptBox["\[Sum]", 
+                SubscriptBox["l", "1"]], 
+               RowBox[{
+                SubscriptBox["b", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["l", "1"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["l", "1"], ",", 
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["l", "2"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["l", "2"], ",", 
+                  SubscriptBox["j", "3"], ",", 
+                  SubscriptBox["k", "3"], ",", 
+                  SubscriptBox["l", "3"]}]]}]}]}]}], ")"}]}]}]}], ")"}]}]}]}],
+     "\[Equal]", 
+    FractionBox["1", "6"]}], ",", "0", ",", "0"}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.9116662502957954`*^9, 3.911913210835936*^9, 3.9119132502376947`*^9, {
+   3.912001472312009*^9, 3.9120014823839226`*^9}, 3.9120037156795425`*^9, 
+   3.9466070858438263`*^9, {3.9466071280806503`*^9, 3.9466071557689705`*^9}, 
+   3.946607245393343*^9, 3.946607445069437*^9, 3.9466166231588154`*^9},
+ CellLabel->
+  "During evaluation of \
+In[29]:=",ExpressionUUID->"f1f95626-8cd5-a44c-b244-5903f046c812"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "0", ",", "0"}], "}"}], ",", 
+   RowBox[{
+    RowBox[{
+     UnderscriptBox["\[Sum]", 
+      SubscriptBox["j", "3"]], 
+     RowBox[{
+      UnderscriptBox["\[Sum]", 
+       SubscriptBox["k", "3"]], 
+      RowBox[{
+       UnderscriptBox["\[Sum]", 
+        SubscriptBox["l", "3"]], 
+       RowBox[{"(", 
+        RowBox[{
+         UnderscriptBox["\[Sum]", 
+          SubscriptBox["j", "2"]], 
+         RowBox[{
+          UnderscriptBox["\[Sum]", 
+           SubscriptBox["k", "2"]], 
+          RowBox[{
+           UnderscriptBox["\[Sum]", 
+            SubscriptBox["l", "2"]], 
+           RowBox[{"(", 
+            RowBox[{
+             UnderscriptBox["\[Sum]", 
+              SubscriptBox["j", "1"]], 
+             RowBox[{
+              UnderscriptBox["\[Sum]", 
+               SubscriptBox["k", "1"]], 
+              RowBox[{
+               UnderscriptBox["\[Sum]", 
+                SubscriptBox["l", "1"]], 
+               RowBox[{
+                SubscriptBox["b", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["l", "1"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["l", "2"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["j", "3"], ",", 
+                  SubscriptBox["k", "3"], ",", 
+                  SubscriptBox["l", "3"]}]]}]}]}]}], ")"}]}]}]}], ")"}]}]}]}],
+     "\[Equal]", 
+    FractionBox["1", "3"]}], ",", "0", ",", "0"}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.9116662502957954`*^9, 3.911913210835936*^9, 3.9119132502376947`*^9, {
+   3.912001472312009*^9, 3.9120014823839226`*^9}, 3.9120037156795425`*^9, 
+   3.9466070858438263`*^9, {3.9466071280806503`*^9, 3.9466071557689705`*^9}, 
+   3.946607245393343*^9, 3.946607445069437*^9, 3.9466166231667976`*^9},
+ CellLabel->
+  "During evaluation of \
+In[29]:=",ExpressionUUID->"8937814a-5258-a649-92c4-f295bc1c8061"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "0"}], "}"}], ",", 
+   RowBox[{
+    RowBox[{
+     UnderscriptBox["\[Sum]", 
+      SubscriptBox["j", "3"]], 
+     RowBox[{
+      UnderscriptBox["\[Sum]", 
+       SubscriptBox["k", "3"]], 
+      RowBox[{
+       UnderscriptBox["\[Sum]", 
+        SubscriptBox["l", "3"]], 
+       RowBox[{"(", 
+        RowBox[{
+         UnderscriptBox["\[Sum]", 
+          SubscriptBox["j", "2"]], 
+         RowBox[{
+          UnderscriptBox["\[Sum]", 
+           SubscriptBox["k", "2"]], 
+          RowBox[{
+           UnderscriptBox["\[Sum]", 
+            SubscriptBox["l", "2"]], 
+           RowBox[{"(", 
+            RowBox[{
+             UnderscriptBox["\[Sum]", 
+              SubscriptBox["j", "1"]], 
+             RowBox[{
+              UnderscriptBox["\[Sum]", 
+               SubscriptBox["k", "1"]], 
+              RowBox[{
+               UnderscriptBox["\[Sum]", 
+                SubscriptBox["l", "1"]], 
+               RowBox[{
+                SubscriptBox["b", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["l", "1"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["j", "3"], ",", 
+                  SubscriptBox["k", "3"], ",", 
+                  SubscriptBox["l", "3"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["l", "2"]}]]}]}]}]}], ")"}]}]}]}], ")"}]}]}]}],
+     "\[Equal]", 
+    FractionBox["1", "3"]}], ",", "1", ",", "1"}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.9116662502957954`*^9, 3.911913210835936*^9, 3.9119132502376947`*^9, {
+   3.912001472312009*^9, 3.9120014823839226`*^9}, 3.9120037156795425`*^9, 
+   3.9466070858438263`*^9, {3.9466071280806503`*^9, 3.9466071557689705`*^9}, 
+   3.946607245393343*^9, 3.946607445069437*^9, 3.9466166232056904`*^9},
+ CellLabel->
+  "During evaluation of \
+In[29]:=",ExpressionUUID->"00817b10-0db7-b34d-abc7-740880541fda"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "2", ",", "0"}], "}"}], ",", 
+   RowBox[{
+    RowBox[{
+     UnderscriptBox["\[Sum]", 
+      SubscriptBox["j", "3"]], 
+     RowBox[{
+      UnderscriptBox["\[Sum]", 
+       SubscriptBox["k", "3"]], 
+      RowBox[{
+       UnderscriptBox["\[Sum]", 
+        SubscriptBox["l", "3"]], 
+       RowBox[{"(", 
+        RowBox[{
+         UnderscriptBox["\[Sum]", 
+          SubscriptBox["j", "2"]], 
+         RowBox[{
+          UnderscriptBox["\[Sum]", 
+           SubscriptBox["k", "2"]], 
+          RowBox[{
+           UnderscriptBox["\[Sum]", 
+            SubscriptBox["l", "2"]], 
+           RowBox[{"(", 
+            RowBox[{
+             UnderscriptBox["\[Sum]", 
+              SubscriptBox["j", "1"]], 
+             RowBox[{
+              UnderscriptBox["\[Sum]", 
+               SubscriptBox["k", "1"]], 
+              RowBox[{
+               UnderscriptBox["\[Sum]", 
+                SubscriptBox["l", "1"]], 
+               RowBox[{
+                SubscriptBox["b", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["l", "1"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["j", "3"], ",", 
+                  SubscriptBox["k", "3"], ",", 
+                  SubscriptBox["l", "3"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["l", "1"], ",", 
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["l", "2"]}]]}]}]}]}], ")"}]}]}]}], ")"}]}]}]}],
+     "\[Equal]", 
+    FractionBox["1", "3"]}], ",", "1", ",", "1"}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.9116662502957954`*^9, 3.911913210835936*^9, 3.9119132502376947`*^9, {
+   3.912001472312009*^9, 3.9120014823839226`*^9}, 3.9120037156795425`*^9, 
+   3.9466070858438263`*^9, {3.9466071280806503`*^9, 3.9466071557689705`*^9}, 
+   3.946607245393343*^9, 3.946607445069437*^9, 3.9466166232455864`*^9},
+ CellLabel->
+  "During evaluation of \
+In[29]:=",ExpressionUUID->"6ce0da34-a9a0-314a-9d33-5a5bfad9637d"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "1", ",", "1"}], "}"}], ",", 
+   RowBox[{
+    RowBox[{
+     UnderscriptBox["\[Sum]", 
+      SubscriptBox["j", "3"]], 
+     RowBox[{
+      UnderscriptBox["\[Sum]", 
+       SubscriptBox["k", "3"]], 
+      RowBox[{
+       UnderscriptBox["\[Sum]", 
+        SubscriptBox["l", "3"]], 
+       RowBox[{"(", 
+        RowBox[{
+         UnderscriptBox["\[Sum]", 
+          SubscriptBox["j", "2"]], 
+         RowBox[{
+          UnderscriptBox["\[Sum]", 
+           SubscriptBox["k", "2"]], 
+          RowBox[{
+           UnderscriptBox["\[Sum]", 
+            SubscriptBox["l", "2"]], 
+           RowBox[{"(", 
+            RowBox[{
+             UnderscriptBox["\[Sum]", 
+              SubscriptBox["j", "1"]], 
+             RowBox[{
+              UnderscriptBox["\[Sum]", 
+               SubscriptBox["k", "1"]], 
+              RowBox[{
+               UnderscriptBox["\[Sum]", 
+                SubscriptBox["l", "1"]], 
+               RowBox[{
+                SubscriptBox["b", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["l", "1"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["l", "2"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["j", "3"], ",", 
+                  SubscriptBox["k", "3"], ",", 
+                  SubscriptBox["l", "3"]}]]}]}]}]}], ")"}]}]}]}], ")"}]}]}]}],
+     "\[Equal]", 
+    FractionBox["1", "3"]}], ",", "0", ",", "0"}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.9116662502957954`*^9, 3.911913210835936*^9, 3.9119132502376947`*^9, {
+   3.912001472312009*^9, 3.9120014823839226`*^9}, 3.9120037156795425`*^9, 
+   3.9466070858438263`*^9, {3.9466071280806503`*^9, 3.9466071557689705`*^9}, 
+   3.946607245393343*^9, 3.946607445069437*^9, 3.9466166232845116`*^9},
+ CellLabel->
+  "During evaluation of \
+In[29]:=",ExpressionUUID->"4abaf1d8-7658-5841-9118-b094d0d281f8"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "2", ",", "1"}], "}"}], ",", 
+   RowBox[{
+    RowBox[{
+     UnderscriptBox["\[Sum]", 
+      SubscriptBox["j", "3"]], 
+     RowBox[{
+      UnderscriptBox["\[Sum]", 
+       SubscriptBox["k", "3"]], 
+      RowBox[{
+       UnderscriptBox["\[Sum]", 
+        SubscriptBox["l", "3"]], 
+       RowBox[{"(", 
+        RowBox[{
+         UnderscriptBox["\[Sum]", 
+          SubscriptBox["j", "2"]], 
+         RowBox[{
+          UnderscriptBox["\[Sum]", 
+           SubscriptBox["k", "2"]], 
+          RowBox[{
+           UnderscriptBox["\[Sum]", 
+            SubscriptBox["l", "2"]], 
+           RowBox[{"(", 
+            RowBox[{
+             UnderscriptBox["\[Sum]", 
+              SubscriptBox["j", "1"]], 
+             RowBox[{
+              UnderscriptBox["\[Sum]", 
+               SubscriptBox["k", "1"]], 
+              RowBox[{
+               UnderscriptBox["\[Sum]", 
+                SubscriptBox["l", "1"]], 
+               RowBox[{
+                SubscriptBox["b", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["l", "1"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["j", "3"], ",", 
+                  SubscriptBox["k", "3"], ",", 
+                  SubscriptBox["l", "3"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["l", "1"], ",", 
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["l", "2"]}]]}]}]}]}], ")"}]}]}]}], ")"}]}]}]}],
+     "\[Equal]", 
+    FractionBox["1", "3"]}], ",", "1", ",", "1"}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.9116662502957954`*^9, 3.911913210835936*^9, 3.9119132502376947`*^9, {
+   3.912001472312009*^9, 3.9120014823839226`*^9}, 3.9120037156795425`*^9, 
+   3.9466070858438263`*^9, {3.9466071280806503`*^9, 3.9466071557689705`*^9}, 
+   3.946607245393343*^9, 3.946607445069437*^9, 3.9466166232924614`*^9},
+ CellLabel->
+  "During evaluation of \
+In[29]:=",ExpressionUUID->"99a6e091-6635-2246-9a12-ec80f0877096"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"1", ",", "2", ",", "2"}], "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"0", ",", "2", ",", "2"}], "}"}], ",", 
+   RowBox[{
+    RowBox[{
+     UnderscriptBox["\[Sum]", 
+      SubscriptBox["j", "3"]], 
+     RowBox[{
+      UnderscriptBox["\[Sum]", 
+       SubscriptBox["k", "3"]], 
+      RowBox[{
+       UnderscriptBox["\[Sum]", 
+        SubscriptBox["l", "3"]], 
+       RowBox[{"(", 
+        RowBox[{
+         UnderscriptBox["\[Sum]", 
+          SubscriptBox["j", "2"]], 
+         RowBox[{
+          UnderscriptBox["\[Sum]", 
+           SubscriptBox["k", "2"]], 
+          RowBox[{
+           UnderscriptBox["\[Sum]", 
+            SubscriptBox["l", "2"]], 
+           RowBox[{"(", 
+            RowBox[{
+             UnderscriptBox["\[Sum]", 
+              SubscriptBox["j", "1"]], 
+             RowBox[{
+              UnderscriptBox["\[Sum]", 
+               SubscriptBox["k", "1"]], 
+              RowBox[{
+               UnderscriptBox["\[Sum]", 
+                SubscriptBox["l", "1"]], 
+               RowBox[{
+                SubscriptBox["b", 
+                 RowBox[{
+                  SubscriptBox["j", "1"], ",", 
+                  SubscriptBox["k", "1"], ",", 
+                  SubscriptBox["l", "1"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["l", "1"], ",", 
+                  SubscriptBox["j", "2"], ",", 
+                  SubscriptBox["k", "2"], ",", 
+                  SubscriptBox["l", "2"]}]], " ", 
+                SubscriptBox["a", 
+                 RowBox[{
+                  SubscriptBox["l", "1"], ",", 
+                  SubscriptBox["j", "3"], ",", 
+                  SubscriptBox["k", "3"], ",", 
+                  SubscriptBox["l", "3"]}]]}]}]}]}], ")"}]}]}]}], ")"}]}]}]}],
+     "\[Equal]", 
+    FractionBox["1", "3"]}], ",", "0", ",", "0"}], "}"}]], "Print",
+ CellChangeTimes->{
+  3.9116662502957954`*^9, 3.911913210835936*^9, 3.9119132502376947`*^9, {
+   3.912001472312009*^9, 3.9120014823839226`*^9}, 3.9120037156795425`*^9, 
+   3.9466070858438263`*^9, {3.9466071280806503`*^9, 3.9466071557689705`*^9}, 
+   3.946607245393343*^9, 3.946607445069437*^9, 3.946616623328581*^9},
+ CellLabel->
+  "During evaluation of \
+In[29]:=",ExpressionUUID->"31f2e552-0b1b-9149-b017-e4e8e61987a6"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1141.5, 569.25},
+WindowMargins->{{Automatic, 130.5}, {40.5, Automatic}},
+Magnification:>0.8 Inherited,
+FrontEndVersion->"14.1 for Microsoft Windows (64-bit) (July 16, 2024)",
+StyleDefinitions->"Default.nb",
+ExpressionUUID->"e53464ba-e1f5-4c7e-bb0d-b0ae2c1668a5"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 474, 8, 53, "Input",ExpressionUUID->"f80e652a-9315-4753-9ea1-96cc19bcbcf8"],
+Cell[CellGroupData[{
+Cell[1057, 32, 202, 3, 42, "Subsection",ExpressionUUID->"97b2ec05-12c2-3d4b-a8f7-15154eb26b47"],
+Cell[1262, 37, 944, 20, 37, "Input",ExpressionUUID->"6ee46217-3df2-4da5-97c6-42b29e4408dd"],
+Cell[2209, 59, 1652, 37, 68, "Input",ExpressionUUID->"f418797e-9269-460d-83c5-22e3678fdcce"],
+Cell[3864, 98, 1509, 36, 144, "Input",ExpressionUUID->"41377f13-fe03-477e-a441-699080ef2e8e"],
+Cell[5376, 136, 1879, 43, 68, "Input",ExpressionUUID->"690c46a8-6858-438b-ad65-4672c987e2c1"],
+Cell[7258, 181, 1952, 48, 144, "Input",ExpressionUUID->"ad4c79b1-4420-f94c-a9fb-b7204a0a41a9"],
+Cell[9213, 231, 4059, 93, 296, "Input",ExpressionUUID->"1811007f-a066-4120-90e1-f4459d3d947c"],
+Cell[CellGroupData[{
+Cell[13297, 328, 1916, 49, 68, "Input",ExpressionUUID->"ec2b3235-f37d-4257-80fa-7b5090a194ea"],
+Cell[CellGroupData[{
+Cell[15238, 381, 1475, 39, 18, "Print",ExpressionUUID->"674574a8-681f-0d43-8a45-7869f96b16ed"],
+Cell[16716, 422, 1473, 39, 18, "Print",ExpressionUUID->"0a4ea2a2-ec29-9845-8fc3-785f7a40fcf4"],
+Cell[18192, 463, 1475, 39, 18, "Print",ExpressionUUID->"ebd99f75-167d-8647-b69d-f0a461f74e85"],
+Cell[19670, 504, 1475, 39, 18, "Print",ExpressionUUID->"69bf6894-4739-304f-9f49-a34694f0b9eb"],
+Cell[21148, 545, 1473, 39, 18, "Print",ExpressionUUID->"da2a432a-a882-1449-a22b-15d2629d0faf"],
+Cell[22624, 586, 1475, 39, 18, "Print",ExpressionUUID->"18e9f101-fef0-864f-ba4d-6e4f30a63567"],
+Cell[24102, 627, 1475, 39, 18, "Print",ExpressionUUID->"bd02593a-0096-1543-b775-6662db224a19"],
+Cell[25580, 668, 1475, 39, 18, "Print",ExpressionUUID->"f0846fb3-3654-234b-81b2-c39825f9d7f1"],
+Cell[27058, 709, 1473, 39, 18, "Print",ExpressionUUID->"86b621cc-fd63-6c4a-92d7-7e987b2fc158"],
+Cell[28534, 750, 1475, 39, 18, "Print",ExpressionUUID->"0d92630c-4925-1f45-896c-de3b5f9933d2"],
+Cell[30012, 791, 1475, 39, 18, "Print",ExpressionUUID->"5c587b2d-f472-ec4f-be11-f6f72d07ee2c"],
+Cell[31490, 832, 1475, 39, 18, "Print",ExpressionUUID->"35ee9353-e79c-794b-9a85-18b4a38d892e"],
+Cell[32968, 873, 1475, 39, 18, "Print",ExpressionUUID->"09cf37e1-90fb-e743-8044-d0dfbf500685"],
+Cell[34446, 914, 1475, 39, 18, "Print",ExpressionUUID->"c1f9264f-d90a-c045-aad5-9c4a775f5501"],
+Cell[35924, 955, 1475, 39, 18, "Print",ExpressionUUID->"7c15fd8d-261f-ec4c-9baa-56e9ce84f997"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[37448, 1000, 4770, 115, 205, "Input",ExpressionUUID->"4794322d-63c1-45e3-b331-df1f9d9ec1c3"],
+Cell[CellGroupData[{
+Cell[42243, 1119, 2336, 64, 39, "Print",ExpressionUUID->"fafe6941-ee6e-4843-ac34-77b75b96c482"],
+Cell[44582, 1185, 2336, 64, 39, "Print",ExpressionUUID->"25b695b2-8b8b-974e-832d-a3b1fe2b3605"],
+Cell[46921, 1251, 2336, 64, 39, "Print",ExpressionUUID->"bd8d3dd7-3a75-1e46-9f71-eaa35df5e923"],
+Cell[49260, 1317, 2336, 64, 39, "Print",ExpressionUUID->"7c68aee3-f2cc-c441-bfee-7ff67b2a70dd"],
+Cell[51599, 1383, 2336, 64, 39, "Print",ExpressionUUID->"2eccc8ad-0984-8344-8a90-e092d9005d3e"],
+Cell[53938, 1449, 2334, 64, 39, "Print",ExpressionUUID->"239216c4-0b5b-9f47-80bb-134838a30307"],
+Cell[56275, 1515, 2336, 64, 39, "Print",ExpressionUUID->"db0ac549-ff36-3346-ace6-0d5218e36f62"],
+Cell[58614, 1581, 2336, 64, 39, "Print",ExpressionUUID->"bc455788-4211-7c45-93dd-73d48e750c9c"],
+Cell[60953, 1647, 2336, 64, 39, "Print",ExpressionUUID->"f1f95626-8cd5-a44c-b244-5903f046c812"],
+Cell[63292, 1713, 2336, 64, 39, "Print",ExpressionUUID->"8937814a-5258-a649-92c4-f295bc1c8061"],
+Cell[65631, 1779, 2336, 64, 39, "Print",ExpressionUUID->"00817b10-0db7-b34d-abc7-740880541fda"],
+Cell[67970, 1845, 2336, 64, 39, "Print",ExpressionUUID->"6ce0da34-a9a0-314a-9d33-5a5bfad9637d"],
+Cell[70309, 1911, 2336, 64, 39, "Print",ExpressionUUID->"4abaf1d8-7658-5841-9118-b094d0d281f8"],
+Cell[72648, 1977, 2336, 64, 39, "Print",ExpressionUUID->"99a6e091-6635-2246-9a12-ec80f0877096"],
+Cell[74987, 2043, 2334, 64, 39, "Print",ExpressionUUID->"31f2e552-0b1b-9149-b017-e4e8e61987a6"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
