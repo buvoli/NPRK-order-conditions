@@ -23,6 +23,7 @@ Codes for the paper:
  - Generates the level sequence, color sequence and density of all (non-isomorphic) NPRK trees of a given number of partitions and order. Requires `RootedTrees.jl` ([repository](https://github.com/SciML/RootedTrees.jl)) and `DelimitedFiles`. Output is saved as a csv file.
 
 `symbolic_order_conditions/M2_print_nprk_conditions.nb`
+
 `symbolic_order_conditions/M3_print_nprk_conditions.nb`
 
  - Mathematica notebooks for producing symbolic NPRK order conditions for $M=2$ partitions and $M=3$ partitions, respectively, for any order of NPRK trees.
