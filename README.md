@@ -13,8 +13,8 @@ Codes for the paper:
  - `isMultiColored`: determines whether a `ColoredRootedTree` (either ARK or NPRK tree specified as a Bool in argument) contains multiple colors, corresponding to coupling conditions.
  - `GetParentIndex`: given a node in a tree, returns the index in the level sequence of the parent node.
  - `isColorBranching`: determines whether an NPRK tree is color branching, i.e., contains at least one node with two outward edges of different colors, corresponding to nonlinear coupling conditions.
- - `elementaryWeightNPRK2`: given an NPRK tableau $A$ (cubic 3-tensor) and $b$ (square matrix) and an NPRK tree $\tau$ corresponding to 2 partitions (i.e., 2 colors), returns the elementary weight $\phi(\tau)$ of that tree, i.e., the LHS of the order condition (See Algorithm 1 of [1]). 
- - `residualNPRK2`: returns the residual of the order condition corresponding to the above elementary weight, i.e., $|\phi(\tau) - 1/\gamma(\tau)|$.
+ - `elementaryWeightNPRK2`: given an NPRK tableau $A$ (cubic 3-tensor) and $b$ (square matrix) and an NPRK tree $\tau$ corresponding to 2 partitions (i.e., 2 colors), returns the elementary weight $\Phi(\tau)$ of that tree, i.e., the LHS of the order condition (See Algorithm 1 of [1]). 
+ - `residualNPRK2`: returns the residual of the order condition corresponding to the above elementary weight, i.e., $|\Phi(\tau) - 1/\gamma(\tau)|$.
  - `NPRKTrees/nprktrees_test.jl`: tests to verify the above module.
 
 ### Symbolic order conditions
