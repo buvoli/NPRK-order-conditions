@@ -27,6 +27,7 @@ Codes for the paper:
  - Mathematica notebooks for producing symbolic NPRK order conditions for $M=2$ partitions and $M=3$ partitions, respectively, for any order of NPRK trees.
  - Reads in output files from `M_colored_rooted_trees.jl`.
  - Also includes Mathematica implementations of `isMultiColored`, `GetParentIndex`, `isColorBranching` above.
+ - Folder includes several pre-generated output files.
 
 ### Embedded estimates of nonlinear coupling
 
